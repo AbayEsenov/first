@@ -83,8 +83,96 @@ if 1...7 ~= x {
 for i in 1...10 {
     guard i < 9 else {continue}
     print(i)
-  
+  }
+
+//switch всегда требует default значение
+let x = 10
+// switch x {
+//     case 10, 15: // возможно использование нельскольких значений в однм case
+//         print("x is 10 or 15")
+//     fallthrough //принудительное продолжение исполнения кода
+//     case 20:
+//          print("x is 20")
+//     case 30...50:// возможно использование диапазонов
+//          print("x between 30 and 50")
+//     default:
+//     break
+// }
+
+
+// for in цикл перебирающий значение в диапазоне, массиве и т.д.
+let a = "Abay"
+for char in a { // в данном случае,перебиратся значения строки
+   // print(char)
 }
+let dictionary = ["Abay":1, "Olga":2,"Alvin":3] // для перебора словаря необходимо назвать ключ и значение (name,number в данном примере)
+for (name, number) in dictionary.enumerated() { // enumerated() позволяет извлечь индекс и его значение
+   // print(name, number)
+}
+for i in stride(from:1, through:9, by:2){ // stride позволяет перебирать значения с указанным шагом
+   // print(i)
+}
+
+// while цикл выполняющий итерации пока соблюдается условие
+var timer = 10
+//while timer > 0 {  //пока timer > 0, будет происходить итерация цикла
+    //print(timer)
+   // timer -= 1
+//}
+
+// repeat -while
+// repeat {
+//     print(timer) // в данном случае сначала выполнится итерации а потом произойдет проверка условия,тогда как в while условия проверяется до первой итерации
+//     timer -= 1
+// } while timer > 0
+
+//func функции
+func sayHello() { // простая функиция,которая не принимает и не возвращает значений
+}
+func withOneParam(parametr:Int) { // функция,принимающая один параметр и не возварщающая значений 
+    var parametr = parametr
+    parametr += 1
+}
+func withReturn() -> Int { // функция, не принимающая параметров но возвращающая значение
+    return 10
+}
+func withParamAndReturn(name:String, lastName:String) -> String {// функция,принимающая параметры и возвращающая значение
+    return "\(name) \(lastName)"
+}
+func withArray (array:[Int]) -> Int {// функция принимающая массив
+    var sum = 0 // обьявляем переменную
+    func saySum() {// создаем функицю для выведения результата
+        print(sum)
+    }
+    for i in array {//создаем цикл для перебора значений массива
+        sum += i
+    }
+    saySum()// вызываем функию для выведения результата
+    return sum              
+ }
+func withVarParam (Numbers: Int...) -> Int {//функция принимающая вариативные параметры(не установленное заранее количество)
+    var sum = 0
+    for i in Numbers {
+        sum += i
+    }
+    return sum
+}
+// func someFunc (_:Int) -> Int{// функция с параметром без имени
+// }
+
+func playerCount (team:Bool) -> (Int) -> Int { //функция принимающая в качестве возвращаемого значения другую функцию
+    func addPlayer(player:Int) -> Int { return player + 1 }
+    func zeroPlayer(player:Int) -> Int { return player - 1 }
+    return team ? addPlayer: zeroPlayer // в зависимости от значения team return примет результат одной из функций выше
+}
+
+            
+    
+
+
+
+
+
 
 
 
