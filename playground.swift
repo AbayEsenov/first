@@ -290,10 +290,86 @@ class Child: People { // создаем класс Child который насл
 }
 let child1 = Child(toy:"car",name:"Nigga")
 print(child1.showName())
-// добваление final перед class или func запрещает переопределение          
+// добавление final перед class или func запрещает переопределение          
     
 
+// вычисляемые значения, всегда определяются var
+class Rectangular {
+    let height: Int 
+    let width: Int 
+    let dept: Int 
 
+    var volume: Int {// вычисляемое свойство, обязательно имеет return и тип
+        return height * width * dept
+    } 
+
+    init(height:Int, width:Int, dept:Int) {
+        self.height = height
+        self.width = width
+        self.dept = dept
+    }
+}
+let rect = Rectangular (height:5, width:7, dept:4)
+
+class Person {
+    var name:String
+    var secondName: String
+
+    var fullName: String {
+        get { // get это результат вычисляемой переменной
+        return name + " " + secondName
+        }
+        set (newValue) {// переменная newValue устанавливается по умолчанию и принимает новое значение
+            let array = newValue.components(separatedBy: " ") // новое значение помещаем в массив и применяя метод разделяем значения, идущие через пробел
+            name = array[0] // свойствам массива присваиваются значения массива
+            secondName = array[1]
+        }
+        }    
+    init (name:String, secondName:String) {
+        self.name = name
+        self.secondName = secondName
+    }
+}
+let person = Person(name:"Johny", secondName:"Boy")
+person.fullName = "Jason Knight" // благодаря get и set теперь можно сразу поменять fullName
+
+// свойства классов
+class Car {
+    let people: Int 
+    let food: Int 
+    let stuff: Int 
+    class var carWeight: Int {return 1500} // определям свойства классов, данные свойства 
+    class var maxWeight: Int {return 2000} // не будут доступны для инициализации и изменения
+
+    var totalWeight: Int {
+        return people + food + stuff + Car.carWeight
+    }
+
+    init (people:Int, food:Int, stuff:Int) {
+        self.people = people
+        self.food = food
+        self.stuff = stuff
+    }
+}
+let car = Car(people:450, food:10, stuff:100)
+ // для обращения к свойству класса пишем имя класса и свойство, в отличии от обращения к экземпляру класса
+let carWeight = Car.carWeight
+let maxWeight = Car.maxWeight
+if maxWeight < car.totalWeight {
+    //print("Car is overloaded on: \(car.totalWeight - maxWeight)")
+} else {
+   // print("Ok")
+}
+
+// ленивые свойства - lazy (только var) позвляеют не инициализировать свойства при создании экземпляра, т.е. дает возможность инициализировать
+// тогда, когда это будет нужно
+
+class Process {
+    let firstProcess = "some process"
+    lazy var secondProcess = "other process"
+}
+let process = Process() // lazy свойство не инициализировано
+process.secondProcess // lazy свойство инициализировано
 
 
 
