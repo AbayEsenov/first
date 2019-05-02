@@ -166,7 +166,131 @@ func playerCount (team:Bool) -> (Int) -> Int { //функция принимаю
     return team ? addPlayer: zeroPlayer // в зависимости от значения team return примет результат одной из функций выше
 }
 
-            
+ // closure функция без имени, closure можно поместить в константу, и часто используется для указания алгоритма исполнения кода
+let closure = { // простой closure, помещенный в констану
+    //print("Hi")
+}
+func repeat3Times(closure: () -> ()) { // функция принимающая в качестве параметра closure
+    for i in 0...2 {
+       closure()
+    }
+    
+}
+repeat3Times(closure:closure) // вызываем функция, передавая параметр closure
+repeat3Times(closure: { // вызываем функцию и передаем ей closure без имени и не помещенный в константу
+    () -> () in // явное указание типа closure
+    //print("Hi")
+}) //для последующего замыкания нужно удалить круглые скобки и слово closure
+let someArray = [1,3,8,345,69,234,68] // создаем массив
+let sortedArray = someArray.sorted { // создаем массив,куда помещаем someArray и применяем sorted с использованием closure
+     (num1:Int, num2:Int) -> Bool in //closure принимает два числа
+    return num1 < num2    
+}
+//print(sortedArray)
+
+// tuples - кортежи позволяют объединить некоторые значения
+let exampleTuple = (name:"Name", lastName:"LastName", age: 34, temp: 36.6, male: true)// создали константу с tuple в которой содержатся значения разного типа
+//let (name, lastName, age, temp, male) = exampleTuple // создали константы со значениями exampleTuple
+exampleTuple.name //обращение к значениям константы
+let nameAndNumber = ["Abay": 7, "Olga": 9, "Sveta": 3,"Olya": 5]
+var name = " "
+var number = 0
+for (nameT, numberT) in nameAndNumber {
+    if number < numberT {
+        number = numberT
+        name = nameT
+    }
+}
+
+// опционалы,это переменные которые могут иметь значение nil
+var fuel: Int? // создание опциональной переменной
+fuel = 7
+//fuel = nil
+//print(fuel!) // знак ! позволяет убрать надпись optional, но нужно быть уверенным что значение есть всегда и оно никогда не будет nill
+
+// опциональная привязка позволяет аккуратно извлечь значение, без ошибок
+if let avFuel = fuel { // создали константу,которая принимает значение fuel 
+    //print("available is \(avFuel)") //  print сработает только если значение НЕ nil
+} else {
+    //print("no available")// print сработает если значение nill
+}
+
+func checkFuel() { // пример использования опционала через guard в функции
+guard let avFuel = fuel else {
+print("no available") // если fuel nil сработает print
+return
+} 
+print("available is \(avFuel)")
+}
+
+// классы,это шаблоны объектов
+class Human {// называется класс с большой буквы
+var name = "Abay" // переменные являются свойствами класса
+var age:Int? = 27
+var hairs = true
+
+func description() -> String { // функция внутри класса - это метод класса
+    if let ageOpt = age {// опциональная привязка
+    return "My name is \(name), and I`am \(ageOpt) years old"
+    } else {
+    return "My name is \(name)"
+    } 
+}
+}
+let firstHuman = Human() //создаем экземпляр класса,т.е. он имеет все свойства и методы класса
+firstHuman.name = "Who"
+firstHuman.age = 5
+
+let secondHuman = Human()
+secondHuman.name = "Some"
+secondHuman.age = 7
+
+var array = [Human]() // создаем массив с типом класс Human
+array.append(firstHuman) //добавляем в массив экземпляры классов
+array.append(secondHuman)
+
+// инициализаторы
+class Player {
+    var name: String // класс без default значений
+    var health: Int
+
+    func playerDesc() -> String{
+        return "\(name) have \(health) point health"
+    }
+
+    init (name:String, health:Int){ // инициализация 
+    self.name = name
+    self.health = health
+    }
+}
+let player1 = Player(name:"John", health:100)// при создании экземпляров инифиализация свойств происходит в ()
+
+// наследование классов
+class People {
+    var name: String
+
+    func showName()-> String{
+        return "My name is \(name)"
+    }
+    init (name:String) {
+        self.name = name
+    }
+}
+class Child: People { // создаем класс Child который наследует от класса People
+    var toy = "gun" //создаем новое свойство
+
+    override func showName() -> String { // перезаписываем функцию
+        let originText = super.showName() // сохраняем результат функции наследуемого класса
+        return originText + " I have a \(toy)" // добавляем что-либо в результат *(self.toy) или (toy)?
+    }
+    init (toy:String, name:String) {
+        self.toy = toy //инициализиурем свойство Child  
+        super.init(name:name)// инициализируем свойство от наследуемого класса
+    }
+}
+let child1 = Child(toy:"car",name:"Nigga")
+print(child1.showName())
+// добваление final перед class или func запрещает переопределение          
     
 
 
