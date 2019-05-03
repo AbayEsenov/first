@@ -372,6 +372,168 @@ let process = Process() // lazy свойство не инициализиров
 process.secondProcess // lazy свойство инициализировано
 
 
+//наблюдатели свойств наблюдают за изменениям значений свойств
+class Emploee {
+    var accessLevel = 0 {
+        willSet(newValue) { // willSet т.е. значение которое будет установлено, newValue - переменная по умолчанию
+            //print("your new access level is \(newValue)")
+        }
+        didSet(oldValue) { // didSet т.е. старое значение, oldValue - переменная по умолчанию
+            if accessLevel > 0 {
+                accessToDB = true
+            } else {
+                accessToDB = false
+            }
+            //print("your last access level is \(oldValue)") 
+    }
+    }
+    var accessToDB = false
+}
+let emploee = Emploee()
+emploee.accessLevel = 1 // изменение accessLevel приводит к срабатыванию наблюдателей свойства 
+//print(emploee.accessLevel)
+
+// АЛИАСЫ ТИПОВ(ПСЕВДОНИМЫ)
+typealias Santimetrs = Int // теперь можно определять тип значения используя Santimetrs 
+let someInt: Santimetrs = 50
+
+typealias Dictionary = [String: Int] // также можно определить использовать алиас для словаря
+var dictionary: Dictionary = [:] // создаем словарь используя алиас
+dictionary["Something"] = 1
+
+
+// ENUM объединяет связанные значения и присваивает им общий тип
+
+enum Movement: Int { // создаем энум и именуем его с большой буквы.
+// Для энума возможно указать значения: если String то rawValue будет строкой, если Int то rawValue будет возвращать индекс(при отсутствии значения)
+    case forward = 10   
+    case backward = 14
+    case left = 4
+    case right = 5    
+}
+let movement = Movement.backward// присваиваем в константу свойство энума
+//print(movement)// выведет backward, если в значении константы добавить rawValue, то выведется 14
+
+enum Device {
+    case Phone(color:String), Tablet // создаем кейсы а также для Phone устанавливаем доп.свойство
+
+    var year: Int { // объявляем вычисляемую переменную
+        switch self { // перебиваем self значения
+        case .Phone(let color) where color == "white": return 2007 // один из кейсов создан с проверкой доп.условия
+        case .Phone: return 2000 // это case сработает для Phone других цветов
+        case .Tablet: return 2005
+    }
+    }
+}
+let yearDevice = Device.Phone(color:"white").year
+//print(yearDevice)
+
+enum Player { // создаем enum
+    enum Role: Int { // создаем вложенный enum
+        case sniper = 100
+        case shooter = 80
+
+        var accuracy: Int { // создаем выисляемое свойство,которое вовзращает результат операции с rawValue
+            return rawValue * 1
+        }
+    }
+}
+let player1 = Player.Role.sniper.accuracy
+//print(player1)
+
+indirect enum Lunch { // добавление indirect позволяет использовать enum как свойство для case
+    case salad
+    case meat
+    case dessert
+    case meal(Lunch, Lunch)
+}
+let myLunch = Lunch.meal(.meat,.salad)
+//print(myLunch)
+
+//СТРУКТУРЫ занимают отдельные ячейки памяти в отличии от классов,
+//которые явлются ссылочными типами, т.е.к классам применим знак === (тождественности), а к структурам нет
+//структуры не могут наследовать
+
+struct Site { // структура создается также как и класс
+    var siteName = "website.com"
+}
+
+let site1 = Site()
+
+func changeName (site:Site) -> Site {
+    var site = site
+    site.siteName = "6535636m"
+    return site
+}
+changeName(site: site1)
+print(site1.siteName)// в структуре siteName не поменяется а в классе поменяется
+
+// проверка и приведение типов
+
+class Furniture {
+    let material: String
+
+    init (material:String) {
+        self.material = material
+    }
+}
+class Table: Furniture {
+    let places: Int 
+
+    init (places:Int, material:String) {
+        self.places = places
+        super.init(material:material)
+    }
+}
+class Chairs: Furniture {
+    let color: String
+
+    init (color:String, material:String) {
+        self.color = color
+        super.init(material: material)
+    }
+}
+
+var arrayOfFurniture = [Furniture]()
+arrayOfFurniture.append(Table(places:5, material:"wood"))
+arrayOfFurniture.append(Table(places:4, material:"wood"))
+arrayOfFurniture.append(Table(places:2, material:"wood"))
+arrayOfFurniture.append(Table(places:3, material:"wood"))
+arrayOfFurniture.append(Table(places:8, material:"wood"))
+arrayOfFurniture.append(Chairs(color:"black", material:"wood"))
+arrayOfFurniture.append(Chairs(color:"white", material:"wood"))
+arrayOfFurniture.append(Chairs(color:"yellow", material:"wood"))
+
+var table = 0
+var chairs = 0
+
+// for item in arrayOfFurniture { // создаем цикл,который перебирает значение массива
+//     if item is Table { // если item является Table
+//         table += 1
+//     } else {
+//         chairs += 1
+//     }
+// }
+
+// for item in arrayOfFurniture { // форма записи с приведением типа
+//     if item is Table { // проверка условия выглядит также
+//         let sureTable = item as! Table // при выполнении условия, приводим к типу (кастим) Table -принудительное приведение к типу
+//         table += 1
+//     } else {
+//         chairs += 1
+//     }
+// }
+
+for item in arrayOfFurniture {
+    if let sureChairs = item as? Chairs { // альтернативная форма записи через опциональное приведение к типу
+        chairs += 1
+    } else {
+        table += 1
+    }
+}
+
+
+
 
 
 
