@@ -533,7 +533,96 @@ for item in arrayOfFurniture {
 }
 
 
+// опциональные цепочки
+class Person {
+    let job: Job? = Job()
+    let worker: [Worker]? = [Worker()]
+}
+class Job {
+    let salary: Salary? = Salary()
+    
+}
+class Worker {
+    let name = "Abay"
+    func showName() -> String {
+        return "\(name)"
+    }
+}
+class Salary {
+    let salary = 345345
+    func showSalary() -> String {
+       return  "\(salary)"
+    }
+}
 
+let person = Person()
+let salary = person.job?.salary?.salary// опциональная цепочка
+
+
+
+
+// обработчик ошибок
+
+struct Book { // создаем структуру книги
+    let price:Int 
+    var count: Int 
+}
+
+enum PosErrors: Error { // создаем enum (возможные ошибки)
+    case NotInStock
+    case NotEnoughMoney
+    case NeverWasSoBook
+}
+class Library {
+    var deposit = 1
+    var libraryBooks = ["Book1": Book(price:10, count:3), "Book2": Book(price:15, count:1), "Book3": Book(price:20, count:0)] // создаем массив,где один из параметров принимает структуру
+    func getBook(withName:String) throws { // создаем метод с throws (обработчик ошибок) 
+        guard var book = libraryBooks[withName] else { // создаем переменную из элемента массива в инструкции 
+           throw  PosErrors.NeverWasSoBook // если запрошенной книги не существует то сработает эта ошибка
+        }
+        guard  book.count > 0 else { // если книга закончилась сработает эта ошибка
+            throw PosErrors.NotInStock
+        }
+        guard  book.price <= deposit else { // если стоимость книги превышает депозит то сработает ошибка
+            throw PosErrors.NotEnoughMoney
+        }
+        deposit -= book.price // если все guard вернули true, то уменьшаем депозит на стоимость книги
+        book.count -= 1 // уменьшаем количество книг
+        libraryBooks[withName] = book // перезаписываем переменную
+        print("You got the book: \(withName), your deposit is \(deposit)")
+    }
+}
+let library = Library()
+do { // do catch блок "ловит" возможную ошибку и выдает print
+    try print(library.getBook(withName:"Book1"))
+} catch PosErrors.NeverWasSoBook {
+        print("never was so book")
+} catch  PosErrors.NotInStock {
+        print("not in stock")
+} catch PosErrors.NotEnoughMoney {
+        print("not enough money")
+  }
+
+// defer блоки (отложенное исполнение кода), т.е. данные блоки исполняются в последнюю очередь, если defer блоков несколько то выпоняются они с конца
+
+var attempt = 50
+
+func someFunc(param:Int) -> Int {
+    defer { // defer блоки исполнятся после switch
+        attempt += 2
+    }
+    defer {
+        attempt *= 100// defer блоки исполняются с конца,поэтому сначал выполнится этот блок,потом верхний
+    }
+      switch param {
+        case 1:
+        return 1
+        default:
+        return 34
+    }
+ }
+
+someFunc(param:0)
 
 
 
