@@ -624,7 +624,75 @@ func someFunc(param:Int) -> Int {
 
 someFunc(param:0)
 
+// протоколы - набор требований для class, struct, enum
+protocol Human {
+    var name: String { get }
+}
 
+protocol Driver: Human { // создаем протокол // протоколы можно подписывать под другие протоколы
+    var car: Bool { get } // создаем свойство, которое только получает (get) значение
+    var license: Bool { get } // создаем свойство, которое только получает (get) значение
+
+    func toDrive() -> Bool // создаем метод
+}
+
+//  extension FirmDriver: Driver { // создаем расширение для класса,и подписываем протоколом (это помогает разгрузить класс)
+//   var car: Bool  { return true }
+//   var license: Bool  { return true }
+
+//     func toDrive() -> Bool {
+//         return true
+//     }
+//  }
+
+//--- НО МОЖНО СДЕЛАТЬ РАСШИРЕНИЕ НЕПОСРЕДСТВЕННО ПОД ПРОТОКОЛ
+extension Driver {
+    var car: Bool  { return true }
+    var license: Bool  { return true }
+    var name: String { return "Nigga" } // т.к. driver подписан по human,то необходимо добавить свойство из human
+
+    func toDrive() -> Bool {
+        return true
+    }
+}
+
+extension FirmDriver: Driver { // теперь в самом расширении возможно переопределять значения
+    var car: Bool { return false }
+}
+
+class FirmDriver {
+}
+
+let firmDriver = FirmDriver() // экземпляр класса
+firmDriver.car // экземпляр класса имеет свойства и метод протокола
+// class наследовать от одного класса и от нескольких протоколов
+// class Class: FirmDriver, protokol1, protokol 2 {}
+
+// универсальные шаблоны - generic type
+
+func changeToString<T> (param: T) -> String { // функция с <T> принимает параметр любого типа и возвращает строку. Это пример универсальной функции
+    return "\(param)"
+}
+ struct SomeStruct<T, U> { // созаем структуру,в которой может быть 2 параметра универсального типа (универсальные типы могут быть подписаны под протоколы,т.е. задать опред. требования)
+     func someFunc(param: T, param2: U) -> String {
+         return "\(param),\(param2)"
+     }
+ }
+
+ let some = SomeStruct<String, Int> () // при создании экземпляра struct нужно определить типы
+// print(some.someFunc(param:"Nigga",param2:7)) 
+
+var a = "b"
+var b = "a"
+
+func swappy<T>(a: inout T, b: inout T) { // функция принимает inout (сквозной параметр),т.е. теперь она меняет значения
+  let temp = a
+  a = b
+  b = temp
+    
+}
+swappy(a:&a,b:&b) // необходимо использовать амперсанд &
+print(b)
 
 
 
